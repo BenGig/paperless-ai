@@ -138,6 +138,7 @@ class PaperlessService {
       const response = await this.client.post('/custom_fields/', { 
         name: fieldName,
         data_type: fieldType,
+        owner: null,
         extra_data: {
           default_currency: default_currency || null
         }
@@ -288,7 +289,7 @@ class PaperlessService {
     
     try {
       // Versuche zuerst, den Tag zu erstellen
-      const response = await this.client.post('/tags/', { name: tagName });
+      const response = await this.client.post('/tags/', { name: tagName, owner: null });
       const newTag = response.data;
       console.log(`[DEBUG] Successfully created tag "${tagName}" with ID ${newTag.id}`);
       this.tagCache.set(normalizedName, newTag);
@@ -1052,7 +1053,8 @@ async searchForExistingCorrespondent(correspondent) {
         // Create new correspondent only if restrictions are not enabled
         try {
             const createResponse = await this.client.post('/correspondents/', { 
-                name: name 
+                name: name,
+                owner: null
             });
             console.log(`[DEBUG] Created new correspondent "${name}" with ID ${createResponse.data.id}`);
             return createResponse.data;
@@ -1136,7 +1138,8 @@ async getOrCreateDocumentType(name) {
               name: name,
               matching_algorithm: 1, // 1 = ANY
               match: "",  // Optional: Kann später angepasst werden
-              is_insensitive: true
+              is_insensitive: true,
+              owner: null
           });
           console.log(`[DEBUG] Created new document type "${name}" with ID ${createResponse.data.id}`);
           return createResponse.data;
