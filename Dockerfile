@@ -6,12 +6,7 @@ WORKDIR /app
 # Install system dependencies and clean up in single layer
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev \
-    python3-venv \
-    make \
-    g++ \
+    ca-certificates \
     curl \
     wget && \
     apt-get clean && \
@@ -19,12 +14,6 @@ RUN apt-get update && \
 
 # Install PM2 process manager globally
 RUN npm install pm2 -g
-
-# Install Python dependencies for RAG service in a virtual environment
-COPY requirements.txt /app/
-RUN python3 -m venv /app/venv
-ENV PATH="/app/venv/bin:$PATH"
-RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copy package files for dependency installation
 COPY package*.json ./
